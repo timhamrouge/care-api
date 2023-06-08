@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from "styled-components";
-
-import ObservationIcon from '../components/EventIcon';
+import Observation from '../components/Observation';
 
 const Container = styled.div`
   display: flex;
@@ -25,43 +24,6 @@ const TimelineContainer = styled.ul`
     width: 90%;
     margin-top: 36px;
   }
-`;
-
-const ObservationEventContainer = styled.li`
-  padding-bottom: 1.5rem;
-  border-left: 1px solid #67C8E0;
-  position: relative;
-  padding-left: 20px;
-  margin-left: 10px;
-  &:last-child{
-    border: 0px;
-    padding-bottom: 0;
-  }
-  &:before{
-    content: '';
-    width: 15px;
-    height: 15px;
-    background: white;
-    border: 1px solid #ADE1EE;
-    box-shadow: 1px 1px 0px #67C8E0;
-    box-shadow: 1px 1px 0px #67C8E0;
-    border-radius: 50%;
-    position: absolute;
-    left: -9px;
-    top: 0px;
-  }
-  }
-`;
-
-const ObservationEventHeader = styled.div`
-  display: flex;
-`;
-
-const ObservationEventBody = styled.div`
-  display: flex;
-  border: 4px solid #F2E8FA;
-  border-radius: 10px;
-  padding: 8px;
 `;
 
 const ObservationsPage = () => {
@@ -111,22 +73,7 @@ const ObservationsPage = () => {
     <TimelineContainer>
       {/* fix types and props */}
       {!loading && observationEvents && observationEvents.map((observationEvent: any) => {
-        return (<ObservationEventContainer key={observationEvent.id}>
-          {console.log(observationEvent)}
-          <ObservationEventHeader>
-          {observationEvent.timestamp}
-
-          </ObservationEventHeader>
-          <ObservationEventBody>
-            <ObservationIcon observationType={observationEvent.event_type}/>
-            {observationEvent.event_type} by {observationEvent.Caregiver ? `${observationEvent.Caregiver.first_name} ${observationEvent.Caregiver.last_name}` : 'a carer'}
-          
-            
-          </ObservationEventBody>
-
-
-        </ObservationEventContainer>)
-      })}
+        return (<Observation observation={observationEvent} key={observationEvent.id}/>)})}
     </TimelineContainer>
 
   </Container>
