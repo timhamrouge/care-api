@@ -45,7 +45,6 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchCareRecipients = async () => {
       try {
-        console.log(`${process.env.REACT_APP_API_URL}/care-recipients`)
         const response = await fetch(`${process.env.REACT_APP_API_URL}/care-recipients`);
         const json = await response.json();
         setCareRecipients(json.data);
