@@ -48,8 +48,28 @@ interface Props {
     timestamp: string;
   }
 }
-
-const setBody
+// todo finish doing this mapping
+const payloadKey = ({eventType}) => {
+  switch (eventType) {
+    case 'fluid_intake_observation':
+      // also consumed vol though
+      return 'fluid'
+    // case 'physical_health_observation':
+    //   return <StyledIcon icon={faStethoscope} />
+    case 'mental_health_observation':
+      return 'note'
+    // case 'food_intake_observation':
+    //   return <StyledIcon icon={faUtensils} />
+    case 'incontinence_pad_observation':
+      return 'pad_condition'
+    // case 'catheter_observation':
+    //   return ''
+    case 'mood_observation':
+      return 'mood'
+    default:
+      return 'note'
+  }
+}
 
 const Observation = ({observation} : Props) => {
   return (
