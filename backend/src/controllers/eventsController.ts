@@ -3,7 +3,7 @@ import Event from "../models/event";
 import Caregiver from "../models/caregiver";
 import { Op } from "sequelize";
 
-const eventController = {
+const eventsController = {
   // doing it this way will only allow us to view observations for the 2
   // care recipients that we have a record of in that table. there are events
   // with a 3rd unique care recipient id in the table but we have no way of
@@ -46,4 +46,4 @@ const eventController = {
   },
 };
 
-export default eventController;
+export default eventsController;
