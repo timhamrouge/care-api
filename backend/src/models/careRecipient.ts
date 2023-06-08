@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 
 import sequelize from "./db";
 
-const TestCareRecipient = sequelize.define(
+const CareRecipient = sequelize.define(
   "TestCareRecipient",
   {
     id: {
@@ -21,4 +21,4 @@ const TestCareRecipient = sequelize.define(
   }
 );
 
-export default TestCareRecipient;
+export default CareRecipient;
