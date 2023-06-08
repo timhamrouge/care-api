@@ -2,8 +2,13 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/", (_req, res) => {
-  res.send("hello tim");
-});
+import careRecipientsController from "../controllers/careRecipientsController";
+
+router.get("/care-recipients", careRecipientsController.findAll);
+
+router.get(
+  "/care-recipients/:care_recipient_id",
+  careRecipientsController.findOneById
+);
 
 export default router;
