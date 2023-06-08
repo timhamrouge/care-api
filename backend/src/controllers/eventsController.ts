@@ -4,6 +4,11 @@ import Caregiver from "../models/caregiver";
 import { Op } from "sequelize";
 
 const eventController = {
+  // doing it this way will only allow us to view observations for the 2
+  // care recipients that we have a record of in that table. there are events
+  // with a 3rd unique care recipient id in the table but we have no way of
+  // passing it to the front end to query the events table with unless we get
+  // really hacky
   getAllObservationEventsByCareRecipientId: async (
     req: Request,
     res: Response
@@ -27,11 +32,13 @@ const eventController = {
         ],
       });
 
-      // implement pagination
+      const { page = 1, perPage = 5 } = req.query;
+      const offset = (+page - 1) * +perPage;
 
       return res.status(200).send({
         total: queryResult.count,
-        observations: queryResult.rows,
+        observations: queryResult.rows.slice(offset, offset + +perPage),
+        pages: Math.ceil(queryResult.rows.length / +perPage),
       });
     } catch (err: any) {
       res.status(500).send();
