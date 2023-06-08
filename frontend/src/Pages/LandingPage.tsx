@@ -64,7 +64,7 @@ const LandingPage = () => {
       return careRecipient.id === event.target.value;
     });
 
-    navigate(`care-report/${careRecipient!.id}`);
+    navigate(`observations/${careRecipient!.id}`);
   };
 
 
