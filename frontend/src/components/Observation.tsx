@@ -31,25 +31,50 @@ const Container = styled.li`
   }
 `;
 
-const Header = styled.div`
+const Timestamp = styled.div`
   // display: flex;
   margin-bottom: 4px;
 `;
 
 const ObservationEventBody = styled.div`
   display: flex;
+  flex-direction: column;
   border: 4px solid #F2E8FA;
   border-radius: 10px;
   padding: 8px;
 `;
+
+const ObservationEventTitle = styled.div`
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid #F2E8FA;
+`;
+
+const ObservationEventNotes = styled.div`
+  border: 4px solid #F2E8FA;
+  border-radius: 4px;
+  margin: 8px;
+  padding: 8px;
+  font-style: italic;
+`;
+
+const FluidObservationAmount = styled.div`
+  border: 4px solid #F2E8FA;
+  border-radius: 4px;
+  margin: 8px;
+  padding: 8px;
+  font-style: italic;
+`
+
 // implement these properly
 interface Props {
   observation: {
     timestamp: string;
   }
 }
-// todo finish doing this mapping
-const payloadKey = ({eventType}) => {
+// todo finish doing this mapping when more info is known
+const payloadKey = (eventType) => {
+  console.log(eventType)
   switch (eventType) {
     case 'fluid_intake_observation':
       // also consumed vol though
@@ -71,22 +96,34 @@ const payloadKey = ({eventType}) => {
   }
 }
 
-const Observation = ({observation} : Props) => {
+const Observation = ({ observation }: Props) => {
+  const caregiverName = observation.Caregiver
+    ? `${observation.Caregiver.first_name} ${observation.Caregiver.last_name}`
+    : "a carer";
+
   return (
     <Container>
-          {console.log(observation)}
-          <Header>
-          {format(new Date(observation.timestamp), 'do LLL y p')}
-          </Header>
-          <ObservationEventBody>
-            <ObservationIcon observationType={observation.event_type}/>
-            {sentenceCase(observation.event_type)} 
-            {/* <p> */}
-              made by {observation.Caregiver ? `${observation.Caregiver.first_name} ${observation.Caregiver.last_name}` : 'a carer'}  
-            {/* </p> */}
-          </ObservationEventBody>
+      <Timestamp>{format(new Date(observation.timestamp), "do LLL y p")}</Timestamp>
+      <ObservationEventBody>
+        <ObservationEventTitle>
+          <ObservationIcon observationType={observation.event_type} />
+          {sentenceCase(observation.event_type)} made by {caregiverName}
+        </ObservationEventTitle>
+        Observation notes from carer:
+        <ObservationEventNotes>
+          "{observation.payload[payloadKey(observation.event_type)]}"
+        </ObservationEventNotes>
+        {observation.event_type === "fluid_intake_observation" && (
+          <>
+            Amount of fluid consumed:
+            <FluidObservationAmount>
+              "{observation.payload.consumed_volume_ml}ml"
+            </FluidObservationAmount>
+          </>
+        )}
+      </ObservationEventBody>
     </Container>
-  )
-}
+  );
+};
 
 export default Observation;
