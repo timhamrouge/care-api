@@ -77,11 +77,18 @@ const PaginationButtons = styled.div`
   gap: 8px;
 `
 
+const StyledSelect = styled(Select)`
+  // display: flex;
+  // gap: 8px;
+
+`
+
 const ObservationsPage = () => {
   const { care_recipient_id } = useParams();
   const [loading, setLoading] = useState(true);
   const [careRecipient, setCareRecipient] = useState<{date: { id: string, name: string}} | null>(null);
   const [observationEvents, setObservationEvents] = useState<{date: { id: string, name: string}} | null>(null);
+  const [filters, setFilters] = useState<[]>([]);
   // do something with pagination
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pages, setPages] = useState<number | null>(null);
@@ -102,7 +109,11 @@ const ObservationsPage = () => {
     if (care_recipient_id) {
       const fetchObservationEvents = async () => {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/observations/${care_recipient_id}?page=${pageNumber}`);
+          let url = `${process.env.REACT_APP_API_URL}/observations/${care_recipient_id}?page=${pageNumber}`
+          if (filters.length) {
+            url = `${url}&filters=${filters.map(filter => filter.value).join(",")}`
+          }
+          const response = await fetch(url);
           const json = await response.json();
           setPages(json.pages);
           setObservationEventsTotal(json.total);
@@ -117,7 +128,7 @@ const ObservationsPage = () => {
 
     setLoading(false);
     fetchCareRecipient();
-  }, [care_recipient_id, pageNumber]);
+  }, [care_recipient_id, pageNumber, filters]);
 
   const selectOptions = [
     { label: "Fluid intake", value: "fluid_intake" },
@@ -143,11 +154,22 @@ const ObservationsPage = () => {
     }
   }
 
+  const handleSelectChange = (x) => {
+    setFilters(x)
+  }
+
+  console.log(filters)
   return (
   <Container>
     <FiltersContainer>
-      <Select
-        // defaultValue={[colourOptions[2], colourOptions[3]]}
+      <StyledSelect
+        // styles={{
+        //   control: (baseStyles, state) => ({
+        //     ...baseStyles,
+        //     borderColor: !state.isFocused ? 'grey' : 'red',
+        //   }),
+        // }}
+        onChange={handleSelectChange}
         isMulti
         name="event-type-filters"
         options={selectOptions}

@@ -74,7 +74,6 @@ interface Props {
 }
 // todo finish doing this mapping when more info is known
 const payloadKey = (eventType) => {
-  console.log(eventType)
   switch (eventType) {
     case 'fluid_intake_observation':
       // also consumed vol though
