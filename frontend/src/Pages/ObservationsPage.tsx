@@ -162,6 +162,18 @@ const ObservationsPage = () => {
         />
       </FiltersContainer>
 
+      {!loading && observationEvents && observationEventsTotal! === 0 && (
+        <p>
+          Sorry, your search returned no results
+        </p>
+      )}
+
+      {!loading && observationEvents && observationEventsTotal! > 0 && (
+        <p>
+          {observationEventsTotal} observations found for {careRecipient.name}
+        </p>
+      )}
+
       { (!loading && observationEvents && observationEventsTotal! > 0) && (
         <>
           <TimelineContainer>
@@ -182,11 +194,6 @@ const ObservationsPage = () => {
             </PaginationButtons>
           </Pagination>
         </>
-      )}
-      {(!loading && observationEvents && observationEventsTotal === 0) && (
-        <div style={{marginTop: "16px"}}>
-          Sorry, your search returned no results, please try again
-        </div>
       )}
     </Container>
   )
