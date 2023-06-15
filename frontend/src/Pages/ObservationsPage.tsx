@@ -154,7 +154,11 @@ const ObservationsPage = () => {
   return (
     <Container>
       <FiltersContainer>
+        <div style={{ marginBottom: "16px" }}>
+          Select the types of observations you'd like to see:
+        </div>
         <Select
+          id='observation-filters'
           onChange={handleSelectChange}
           isMulti
           name="event-type-filters"
