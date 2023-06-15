@@ -77,12 +77,6 @@ const PaginationButtons = styled.div`
   gap: 8px;
 `
 
-const StyledSelect = styled(Select)`
-  // display: flex;
-  // gap: 8px;
-
-`
-
 const ObservationsPage = () => {
   const { care_recipient_id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -154,46 +148,49 @@ const ObservationsPage = () => {
     }
   }
 
-  const handleSelectChange = (x) => {
-    setFilters(x)
+  const handleSelectChange = (items) => {
+    setFilters(items)
   }
 
   console.log(filters)
   return (
-  <Container>
-    <FiltersContainer>
-      <StyledSelect
-        // styles={{
-        //   control: (baseStyles, state) => ({
-        //     ...baseStyles,
-        //     borderColor: !state.isFocused ? 'grey' : 'red',
-        //   }),
-        // }}
-        onChange={handleSelectChange}
-        isMulti
-        name="event-type-filters"
-        options={selectOptions}
-      />
-    </FiltersContainer>
-    <TimelineContainer>
-      {/* fix types and props */}
-      {!loading && observationEvents && observationEvents.map((observationEvent: any) => {
-        return (<Observation observation={observationEvent} key={observationEvent.id}/>)})}
-    </TimelineContainer>
+    <Container>
+      <FiltersContainer>
+        <Select
+          onChange={handleSelectChange}
+          isMulti
+          name="event-type-filters"
+          options={selectOptions}
+        />
+      </FiltersContainer>
 
-    {!loading && observationEvents && 
-      <Pagination>
-        Page {pageNumber} of {pages}
-        <PaginationButtons>
-          {pageNumber !== 1 && 
-            <PaginationButton onClick={changePage}>Back</PaginationButton>
-          }
-          {pageNumber !== pages && 
-            <PaginationButton onClick={changePage}>Next</PaginationButton>
-          }
-        </PaginationButtons>
-    </Pagination>}
-  </Container>
+      { (!loading && observationEvents && observationEventsTotal! > 0) && (
+        <>
+          <TimelineContainer>
+            {observationEvents.map((observationEvent: any) => {
+              return (<Observation observation={observationEvent} key={observationEvent.id}/>)})}
+          </TimelineContainer>
+
+
+          <Pagination>
+            Page {pageNumber} of {pages}
+            <PaginationButtons>
+              {pageNumber !== 1 && 
+                <PaginationButton onClick={changePage}>Back</PaginationButton>
+              }
+              {pageNumber !== pages && 
+                <PaginationButton onClick={changePage}>Next</PaginationButton>
+              }
+            </PaginationButtons>
+          </Pagination>
+        </>
+      )}
+      {(!loading && observationEvents && observationEventsTotal === 0) && (
+        <div style={{marginTop: "16px"}}>
+          Sorry, your search returned no results, please try again
+        </div>
+      ) }
+    </Container>
   )
 }
 

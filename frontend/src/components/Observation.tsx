@@ -58,7 +58,7 @@ const ObservationEventNotes = styled.div`
   font-style: italic;
 `;
 
-const FluidObservationAmount = styled.div`
+const SubObservation = styled.div`
   border: 4px solid #F2E8FA;
   border-radius: 4px;
   margin: 8px;
@@ -72,22 +72,15 @@ interface Props {
     timestamp: string;
   }
 }
-// todo finish doing this mapping when more info is known
+// todo types
 const payloadKey = (eventType) => {
   switch (eventType) {
     case 'fluid_intake_observation':
-      // also consumed vol though
       return 'fluid'
-    // case 'physical_health_observation':
-    //   return <StyledIcon icon={faStethoscope} />
-    case 'mental_health_observation':
-      return 'note'
-    // case 'food_intake_observation':
-    //   return <StyledIcon icon={faUtensils} />
     case 'incontinence_pad_observation':
       return 'pad_condition'
-    // case 'catheter_observation':
-    //   return ''
+    case 'catheter_observation':
+      return 'volume_ml'
     case 'mood_observation':
       return 'mood'
     default:
@@ -112,14 +105,25 @@ const Observation = ({ observation }: Props) => {
         <ObservationEventNotes>
           "{observation.payload[payloadKey(observation.event_type)]}"
         </ObservationEventNotes>
+
         {observation.event_type === "fluid_intake_observation" && (
           <>
             Amount of fluid consumed:
-            <FluidObservationAmount>
+            <SubObservation>
               "{observation.payload.consumed_volume_ml}ml"
-            </FluidObservationAmount>
+            </SubObservation>
           </>
         )}
+
+        {observation.event_type === "food_intake_observation" && (
+          <>
+            Type of meal:
+            <SubObservation>
+              "{observation.payload.meal}"
+            </SubObservation>
+          </>
+        )}
+        
       </ObservationEventBody>
     </Container>
   );
