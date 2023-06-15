@@ -14,27 +14,30 @@ const eventsController = {
     res: Response
   ): Promise<Response | void> => {
     try {
-      const eventTypeFilters = {
-        [Op.or]: [{ event_type: { [Op.like]: "%observation%" } }],
-        [Op.not]: "no_medication_observation_received",
+      const filters = req.query.filters;
+      // TODO fix types
+      const whereCondition: { care_recipient_id: string; event_type: {} } = {
+        care_recipient_id: req.params.care_recipient_id,
+        event_type: {
+          [Op.like]: "%observation%",
+          [Op.not]: "no_medication_observation_received",
+        },
       };
 
-      if (req.query.filters && typeof req.query.filters === "string") {
-        const filters = req.query.filters.split(",");
+      if (filters && typeof filters === "string") {
+        const filterArray = filters.split(",");
 
-        filters.map((filter) => {
-          eventTypeFilters[Op.or].push({
-            event_type: { [Op.like]: `%${filter}%` },
-          });
-        });
+        // Modify the where condition to include all filters
+        whereCondition.event_type = {
+          [Op.and]: filterArray.map((filter) => ({
+            [Op.like]: `%${filter}%`,
+          })),
+          [Op.not]: "no_medication_observation_received",
+        };
       }
 
-      console.log("hello world", eventTypeFilters);
       const queryResult = await Event.findAndCountAll({
-        where: {
-          care_recipient_id: req.params.care_recipient_id,
-          eventTypeFilters,
-        },
+        where: whereCondition,
         order: [["timestamp", "DESC"]],
         include: [
           {
