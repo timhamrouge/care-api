@@ -13,11 +13,13 @@ const careRecipientsController = {
     }
   },
   findOneById: async (
-    _req: Request,
+    req: Request,
     res: Response
   ): Promise<Response | void> => {
     try {
-      const careRecipient = await CareRecipient.findOne();
+      const careRecipient = await CareRecipient.findOne({
+        where: { id: req.params.care_recipient_id },
+      });
       return res.status(200).send({
         data: careRecipient,
       });
