@@ -135,8 +135,6 @@ const ObservationsPage = () => {
     { label: "Catheter observation", value: "catheter_observation" }
   ];
 
-  console.log(pageNumber, pages)
-
   const changePage = (event) => {
     const buttonText = event.target.outerText;
     if (buttonText === "Next") {
@@ -153,7 +151,6 @@ const ObservationsPage = () => {
     setPageNumber(1)
   }
 
-  console.log(filters)
   return (
     <Container>
       <FiltersContainer>
