@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Event from "../models/event";
 import Caregiver from "../models/caregiver";
-import { Op } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
 
 const eventsController = {
   // doing it this way will only allow us to view observations for the 2
@@ -16,22 +16,33 @@ const eventsController = {
     try {
       const filters = req.query.filters;
       // TODO fix types
-      const whereCondition: { care_recipient_id: string; event_type: {} } = {
+      const whereCondition: WhereOptions = {
         care_recipient_id: req.params.care_recipient_id,
-        event_type: {
-          [Op.like]: "%observation%",
-          [Op.not]: "no_medication_observation_received",
-        },
       };
 
       if (filters && typeof filters === "string") {
         const filterArray = filters.split(",");
 
-        // Modify the where condition to include all filters
-        whereCondition.event_type = {
-          [Op.and]: filterArray.map((filter) => ({
+        const filterConditions = filterArray.map((filter) => ({
+          event_type: {
             [Op.like]: `%${filter}%`,
-          })),
+          },
+        }));
+
+        whereCondition[Op.and as any] = [
+          {
+            [Op.or]: filterConditions,
+          },
+          {
+            event_type: {
+              [Op.like]: "%observation%",
+              [Op.not]: "no_medication_observation_received",
+            },
+          },
+        ];
+      } else {
+        whereCondition.event_type = {
+          [Op.like]: "%observation%",
           [Op.not]: "no_medication_observation_received",
         };
       }
