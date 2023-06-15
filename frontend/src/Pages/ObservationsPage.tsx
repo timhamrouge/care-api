@@ -150,6 +150,7 @@ const ObservationsPage = () => {
 
   const handleSelectChange = (items) => {
     setFilters(items)
+    setPageNumber(1)
   }
 
   console.log(filters)
@@ -189,7 +190,7 @@ const ObservationsPage = () => {
         <div style={{marginTop: "16px"}}>
           Sorry, your search returned no results, please try again
         </div>
-      ) }
+      )}
     </Container>
   )
 }
