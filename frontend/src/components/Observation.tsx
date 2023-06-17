@@ -32,7 +32,6 @@ const Container = styled.li`
 `;
 
 const Timestamp = styled.div`
-  // display: flex;
   margin-bottom: 4px;
 `;
 
