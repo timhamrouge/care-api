@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 
-import { useFetchCareRecipients } from '../services/hooks';
+import useFetchCareRecipients from '../hooks/useFetchCareRecipients';
 
 const Container = styled.div`
   display: flex;

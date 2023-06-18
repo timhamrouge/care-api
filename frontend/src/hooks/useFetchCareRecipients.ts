@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useFetchCareRecipients = () => {
+const useFetchCareRecipients = () => {
   const [loading, setLoading] = useState(true);
   const [careRecipients, setCareRecipients] = useState<null | { id: string, name: string }[]>(null);
 
@@ -23,3 +23,5 @@ export const useFetchCareRecipients = () => {
 
   return { loading, careRecipients };
 };
+
+export default useFetchCareRecipients;
