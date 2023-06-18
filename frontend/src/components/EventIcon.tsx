@@ -1,8 +1,6 @@
-// import { Root } from "./styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBrain, faStethoscope, faGlassWater, faDroplet, faFaceSmile, faSyringe, faEye, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components";
-
 
 interface Props {
   observationType: string;
