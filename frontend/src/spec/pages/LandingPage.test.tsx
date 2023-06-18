@@ -27,5 +27,30 @@ describe("LandingPage", () => {
     expect(title).toBeInTheDocument();
   });
 
+  test('renders a blurb', () => {
+    render(
+      <Router>
+        <LandingPage />
+      </Router>
+      );
+    const blurb = screen.getByText(/Stay connected with your elderly relative/i);
+    expect(blurb).toBeInTheDocument();
+  });
 
+  test('renders a select with care recipients', () => {
+    render(
+      <Router>
+        <LandingPage />
+      </Router>
+      );
+    const select = screen.getByRole("combobox");
+    expect(select).toBeInTheDocument();
+
+    select.click();
+
+    const john = screen.getByText(/John/i);
+    const jane = screen.getByText(/Jane/i);
+    expect(john).toBeInTheDocument();
+    expect(jane).toBeInTheDocument();
+  });
 });
