@@ -4,6 +4,7 @@ import {format } from "date-fns";
 import { sentenceCase } from 'change-case';
 
 import ObservationIcon from '../components/EventIcon';
+import { Observation as ObservationType } from "../services/types";
 
 const Container = styled.li`
   padding-bottom: 1.5rem;
@@ -67,12 +68,10 @@ const SubObservation = styled.div`
 
 // implement these properly
 interface Props {
-  observation: {
-    timestamp: string;
-  }
+  observation: ObservationType;
 }
 // todo types
-const payloadKey = (eventType) => {
+const payloadKey = (eventType : string) => {
   switch (eventType) {
     case 'fluid_intake_observation':
       return 'fluid'
@@ -102,7 +101,7 @@ const Observation = ({ observation }: Props) => {
         </ObservationEventTitle>
         Observation notes from carer:
         <ObservationEventNotes>
-          "{observation.payload[payloadKey(observation.event_type)]}"
+          "{observation.payload[payloadKey(observation.event_type!)]}"
         </ObservationEventNotes>
 
         {observation.event_type === "fluid_intake_observation" && (

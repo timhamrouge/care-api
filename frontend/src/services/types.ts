@@ -8,6 +8,9 @@ export interface Observation {
     consumed_volume_ml?: string;
     note?: string;
     meal?: string;
+    pad_condition?: string;
+    volume_ml?: string;
+    mood?: string;
   }
 };
 
