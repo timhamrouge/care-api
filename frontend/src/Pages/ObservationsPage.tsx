@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 import Select from 'react-select';
 import Observation from '../components/Observation';
+import { Observation as ObservationType } from '../services/types';
 
 const Container = styled.div`
   display: flex;
@@ -80,10 +81,9 @@ const PaginationButtons = styled.div`
 const ObservationsPage = () => {
   const { care_recipient_id } = useParams();
   const [loading, setLoading] = useState(true);
-  const [careRecipient, setCareRecipient] = useState<{date: { id: string, name: string}} | null>(null);
-  const [observationEvents, setObservationEvents] = useState<{date: { id: string, name: string}} | null>(null);
+  const [careRecipient, setCareRecipient] = useState<{ id: string, name: string} | null>(null);
+  const [observationEvents, setObservationEvents] = useState<ObservationType[] | null>(null);
   const [filters, setFilters] = useState<[]>([]);
-  // do something with pagination
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pages, setPages] = useState<number | null>(null);
   const [observationEventsTotal, setObservationEventsTotal] = useState<number | null>(null);
@@ -105,7 +105,7 @@ const ObservationsPage = () => {
         try {
           let url = `${process.env.REACT_APP_API_URL}/observations/${care_recipient_id}?page=${pageNumber}`
           if (filters.length) {
-            url = `${url}&filters=${filters.map(filter => filter.value).join(",")}`
+            url = `${url}&filters=${filters.map((filter: {value: string}) => filter.value).join(",")}`
           }
           const response = await fetch(url);
           const json = await response.json();
@@ -135,7 +135,7 @@ const ObservationsPage = () => {
     { label: "Catheter observation", value: "catheter_observation" }
   ];
 
-  const changePage = (event) => {
+  const changePage = (event: any) => {
     const buttonText = event.target.outerText;
     if (buttonText === "Next") {
       setPageNumber(pageNumber + 1)
@@ -146,7 +146,7 @@ const ObservationsPage = () => {
     }
   }
 
-  const handleSelectChange = (items) => {
+  const handleSelectChange = (items: any) => {
     setFilters(items)
     setPageNumber(1)
   }
@@ -174,7 +174,7 @@ const ObservationsPage = () => {
 
       {!loading && observationEvents && observationEventsTotal! > 0 && (
         <p>
-          {observationEventsTotal} observations found for {careRecipient.name}
+        {observationEventsTotal} observations found for {careRecipient?.name}
         </p>
       )}
 
