@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+
+import { useFetchCareRecipients } from '../services/hooks';
 
 const Container = styled.div`
   display: flex;
@@ -39,24 +40,7 @@ export const Option = styled.option`
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [careRecipients, setCareRecipients] = useState<null | {id: string, name: string}[]>(null);
-
-  useEffect(() => {
-    const fetchCareRecipients = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/care-recipients`);
-        const json = await response.json();
-        setCareRecipients(json.data);
-      } catch (error) {
-        // would be nice to handle this better
-        console.error("Error fetching care recipients:", error);
-      }
-    };
-
-    setLoading(false);
-    fetchCareRecipients();
-  }, []);
+  const { loading, careRecipients } = useFetchCareRecipients();
 
   const handleChooseCareRecipient = (event :any) => {
     const careRecipient = careRecipients!.find((careRecipient) => { 
