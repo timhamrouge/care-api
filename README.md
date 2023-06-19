@@ -36,6 +36,7 @@ I decided I had spent enough time on it at this point and moved onto deploaying 
 
 # If I had more time:
 - move the 2 API reqs in the observations page out into separate hooks files to allow me to...
+- proper loading and error handling states
 - test the observations page properly and mock the above hooks. I would normally do this and my proof of concept for this is the specs for the landing page.
 - tidy up the types and setup in a few places.
 - I would figure out how to deploy only this repo as the app, instead of separating it into 2 repos. 
