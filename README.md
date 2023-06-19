@@ -35,6 +35,7 @@ I decided I had spent enough time on it at this point and moved onto deploaying 
 - the caregiver > observation/event relationship in the eventsController and subsequent fallback on the front-end.
 
 # If I had more time:
+- add a filter in the UI to only show observations recorded during a specific time period specified by the family member/user
 - move the 2 API reqs in the observations page out into separate hooks files to allow me to...
 - proper loading and error handling states
 - test the observations page properly and mock the above hooks. I would normally do this and my proof of concept for this is the specs for the landing page.
