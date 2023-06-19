@@ -20,7 +20,7 @@ Once a care-recipient is selected then the app navigates to the observations pag
 
 Displaying the observations in a timeline felt most appropriate here so that a family member could see the history, with the most recent/relevant observations displayed first.
 
-Once I had a list of observation on the observations page, I began impelmenting the pagination and the `react-select` at the top of the page to allow a family member to select exactly what kind of observations they wanted to see a history for. Multiple observation filters can be selected so they can choose as many or as few as they like. 
+Once I had a list of observation on the observations page, I began impelmenting the pagination and the `react-select` at the top of the page to allow a family member to select exactly what kind of observations they wanted to see a history for. Multiple observation filters can be selected so they can choose as many or as few as they like. Once i had the UI for this i moved back to the backend briefly to implement the conditional observation type filters.
 
 After this the MVP was basically done but I'd already used quite a lot of time, so I moved on to doing some very simple specs. I wrote request specs for each of my 3 endpoints to check that they were returning the correct info, and some unit tests for the React componenets where it felt appropriate to chekc that the logic in them was happening correctly and the correct elements were being ahown/hidden. I tested the landing page in a similair way and moved the get care recipients api request out into a hook which i could then mock to make the tests more robust.
 
