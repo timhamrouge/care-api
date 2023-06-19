@@ -50,7 +50,6 @@ const LandingPage = () => {
     navigate(`observations/${careRecipient!.id}`);
   };
 
-
   return (
     <Container>
       <ContentBox>
@@ -60,12 +59,14 @@ const LandingPage = () => {
 
         <p>To get started, simply select the family member you would like to view the observations for below. We understand the importance of family bonds, and we're here to provide you with a transparent and compassionate way to stay involved in their care journey.</p>
 
-        <SelectContainer>
+        <SelectContainer onChange={handleChooseCareRecipient} defaultValue="">
+          <Option disabled value="">
+            Please select...
+          </Option>
           {!loading && careRecipients && careRecipients.map(careRecipient => {
               return (
                 <Option 
                   key={careRecipient.id}
-                  onClick={handleChooseCareRecipient}
                   value={careRecipient.id}>
                     {careRecipient.name}
                 </Option>
