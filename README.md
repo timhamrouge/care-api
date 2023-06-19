@@ -1,120 +1,47 @@
 # Birdie Developer Test
 
-We would like to thank you for taking our developer test. We understand that candidates will often have many of these tests to complete, therefore we think it's important to cut straight to the important stuff.
+# Usage 
+to get the code running locally, clone the repo, then `cd` into `backend` and `frontend` in 2 separate terminals and run `npm i` in both. after that run `npm run dev` in `backend` and `npm start` in `frontend`.
 
-## About this repository
+CRA should open the react app in your browser ready for you to play with it. 
 
-We've gone ahead and created a boilerplate that mostly corresponds to the technical stack we use at Birdie. The `backend/` is a barebone Express server and the `frontend/` has been generated with `npx create-react-app frontend --template typescript`. This saves you from having to create boilerplate code, but you are free to decide to use only parts of it, for example:
+On the first screen you can choose which care recipient to view the observation events for using the `select`. You will then be taken to the observations page which initially displays a timeline of all observation events for that care recipient. You can use the additive select at the top of the page to filter the types of observations you see, and choose multiple types of observations at a time, and clear the filters one at a time or all at once. The observations are limited to 5 per page and paginated for the sake of reading.
 
-- If you want to use Redux, you can use `npx create-react-app frontend --template redux` or `npx create-react-app frontend --template redux-typescript`.
+The app is deployed here: https://care-api-fe.onrender.com/ on Render.
 
-You are also free to make other technical choices, for example:
+# Technical approach
+I began by looking into the data itself to see figure out what my MVP should be. I decided that we needed to return care recipieints to the fron-end so that a family member could choose which recipient they wanted to see the observations for if they had multiple family members being cared for. Once we had a care recipient selected we needed to be able to display the observation events from the events table, and we should do this by passing the care recipient's id as a url param to the api, from here we could query the database to return events that matched the id. I didn't think we would ever need to query the care givers table via the api for what we are using the data for because we could just add a sequelize relationship to include the care giver info when querying the events. I also thought it would be nice to have an endpoint to just return one care recipient from the api, using the care recipient id like with the observations, for the sake of being able to refresh the front-end after a care-recipient has been chosen, amongst other things.
 
-- Use Redux Thunk, Redux Observables, Redux Saga...
-- Use Express, NestJS, Loopback...
-- PostgreSQL, MySQL...
+I started by learning about `sequelize` as I've never used it before and it seemed like a popular choice with good docs and then began with top down approach for building the API. I build the route to get all the care recipients, then a single care recipient using the id and tested them using Insomnia. I then moved on to the observations endpoint which queries the events table. I decided on this name because it felt more semantic than querying an `events/` endpoint, even though that would be more RESTful. It does use the `eventsController` however as that is the table that is being queried. Once I had all observations being returned I narrowed the search to exclude `no_medication_observation_received` event_types as these didn't feel relevant to a family member, and then implemented the `Caregiver` relationship. Then I implemented some very simple pagination to make the api response more manageable on the front-end.
 
-Although we do encourage you to be pragmatic and prioritise delivering value over fine-tuning your technical stack.
+After that I moved onto the front-end. I began building the landing page and navbar. `react-router` and just using simple hooks (instead of anything more substantial like `redux`) felt appropriate given the scale of the app. I got a basic layout working and implemented the simple select that is populated by the query to the care-recipients endpoint.
 
-## Context
+Once a care-recipient is selected then the app navigates to the observations page and grabs the care recipient's id from the url, which it uses to send 2 api requests, one to fetch the observations and one to fetch the care-recipient. To make this second API request to fetch the care recipient feels more better than storing the care recipieint info in localstorage, for example, or implementing a large state management tool like `redux`, and then having the state there persist, because that feels like overkill. It also allows us to refresh the page once a care-recipient has been selected and nothing breaks.
 
-At Birdie, our app allows care givers to record observations of older adults receiving care, we name them **care recipients**.
+Displaying the observations in a timeline felt most appropriate here so that a family member could see the history, with the most recent/relevant observations displayed first.
 
-These could be anything from the recording of their mood (happy, sad, bored, confused) to what they drank today (1 pint of water).
+Once I had a list of observation on the observations page, I began impelmenting the pagination and the `react-select` at the top of the page to allow a family member to select exactly what kind of observations they wanted to see a history for. Multiple observation filters can be selected so they can choose as many or as few as they like. 
 
-Each of these observations are recorded as events in our database. Here's an example of a mood observation recorded
-in this event format:
+After this the MVP was basically done but I'd already used quite a lot of time, so I moved on to doing some very simple specs. I wrote request specs for each of my 3 endpoints to check that they were returning the correct info, and some unit tests for the React componenets where it felt appropriate to chekc that the logic in them was happening correctly and the correct elements were being ahown/hidden. I tested the landing page in a similair way and moved the get care recipients api request out into a hook which i could then mock to make the tests more robust.
 
-``` json
-{  
-   "id":"decaa026-2ce5-49cb-aff9-92326b85a98c",
-   "event_type":"mood_observation",
-   "visit_id":"39b94aab-cc35-4874-807f-c23472aec663",
-   "timestamp":"2019-04-23T10:53:13+01:00",
-   "caregiver_id":"4786d616-259e-4d52-80f7-8cf7dc6d881a",
-   "care_recipient_id":"03f3306d-a4a3-4179-ab88-81af66df8b7c",
-   "mood":"okay",
-},
-```
+I decided I had spent enough time on it at this point and moved onto deploaying the solution, and the url for this can be found above.
 
-Here's a quick explanation of the base properties:
+# things I'm happy with:
+- the API structure and responses
+- the front-end styling, nice and responsive
+- the fact that it's deployed. I had some trouble with deploying both the front and back end from the same repo so had to separate them out into 2 sub repos.
+- I used `react-select` and `sequelize` for the first time
+- it's lightweight and has a small footprint
+- the caregiver > observation/event relationship in the eventsController and subsequent fallback on the front-end.
 
-- `id`: Uniquely identifies the observation.
-- `event_type`: Title we use to categorise our events.
-- `visit_id`: Observations are traditionally observed during a visit between the caregiver (carer) and care recipient. This ID identifies that visit.
-- `caregiver_id`: Identifies who the caregiver (carer) was that made this observation.
-- `care_recipient_id`: Identifies the care recipient this observation is for.
+# If I had more time:
+- move the 2 API reqs in the observations page out into separate hooks files to allow me to...
+- test the observations page properly and mock the above hooks. I would normally do this and my proof of concept for this is the specs for the landing page.
+- tidy up the types and setup in a few places.
+- I would figure out how to deploy only this repo as the app, instead of separating it into 2 repos. 
+- more specs for the back-end possibly, maybe for the models and controllers although the request specs feel appropriate.
+- i would display a graph at the top of the page that tracks certain things over time, i.e. mood, fluid intake
 
-On top of that, there can be **additional properties** based on the `event_type`:
-
-- `mood` describes the mood of the care recipient as reported by the caregiver
-
-The database (we should have sent you credentials) contains some of these observation events, within the `events` table.
-
-## Challenge
-
-*Display the information to a family member*
-
-#### Your challenge is to clone this repository and create a small web application to visualize these observations, so that looking at it is valuable to a family member of this care recipient
-
-This could mean presenting it in the following forms:
-
-- A table
-- A graph
-- A timeline
-
- Or any other way/combination of those. We are test driven here at Birdie so please make sure you write tests to validate your work.
-
-## Deliverables
-
-- Put your code on Github and send us the link to the repository
-- Deploying the code to a platform like [Heroku](https://heroku.com) is a great plus.
-- **If you are unable to deploy your code please send a recording of the application working**
-
-## Set up
-
-Here's the technical stack this boilerplate was made with:
-
-### Front end
-
-- [React](https://reactjs.org/)
-- [Redux](https://redux.js.org/introduction/getting-started)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Redux sagas](https://redux-saga.js.org/docs/introduction/BeginnerTutorial.html)
-- [Styled components](https://www.styled-components.com/)
-
-### Back end
-
-- [Express](https://expressjs.com/)
-- [MySQL](https://www.mysql.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-
-## Usage
-
-1. Start the API. (Run the following commands within the `backend` folder)
-
-   a. Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-   b. Run the HTTP server (will start on port `8000`)
-
-   ```bash
-   npm run dev
-   ```
-
-2. Start the React app  (Run the following commands within the `front-end` folder)
-
-    a. Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-   b. Run the application (will start on port `3000`)
-
-   ```bash
-   npm start
-   ```
+# challenges
+- deploying the app in one repo, it had to be separated out.
+- the data wasn't great, lots of missing caregivers, necessitating a fallback on the front-end. there are events for a care recipient with an id that does not exist in the care-recipients table etc.
